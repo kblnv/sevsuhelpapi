@@ -24,6 +24,12 @@ async def init(
     
             PRIMARY KEY (user_first_name, user_second_name, user_last_name)
         );
+
+        CREATE TABLE IF NOT EXISTS sos_users (
+            tg_id BIGINT,
+            FOREIGN KEY (tg_id) REFERENCES users (tg_id) ON DELETE CASCADE
+        );
+
     """)
 
 

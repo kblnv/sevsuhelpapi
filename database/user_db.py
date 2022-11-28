@@ -50,12 +50,30 @@ async def update_user(tg_id: int, user: user_models.UserUpdate) -> None:
         tg_id
     )
 
+async def add_user_to_sos(tg_id: int) -> None:
+    """ Функция добавления текущего пользователя
+          в таблицу sos_users (с помощью tg_id)
+        Пользователь считается таковым, если нажал кнопку SOS
+        и отправил местоположение
+    """
+    await db.connection.execute(
+        """INSERT INTO sos_users (tg_id) VALUES ($1)""",
+        tg_id
+    )
+
+
 async def fetch_all_users() -> List[Record]:
     """ Функция получения всех пользователей """
     return await db.connection.fetch(
         """SELECT * FROM users"""
     ) 
 
+
+async def fetch_sos_users() -> List[Record]:
+    """ Функция получания всех пользователей, которые нажали SOS """
+    return await db.connection.fetch(
+        """SELECT * from users, sos_users WHERE users.tg_id = sos_users.tg_id"""
+    )
 
 async def fetch_user_by_tg_id(tg_id: int) -> Record:
     """ Функция получения пользователя по tg_id """
